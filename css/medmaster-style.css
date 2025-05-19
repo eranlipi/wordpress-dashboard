@@ -64,10 +64,7 @@ body {
     width: 100%;
 }
 
-.update-card-wrapper .card:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-}
+
 
 .update-card-wrapper .card-body {
     padding: 1.5rem;
@@ -358,10 +355,12 @@ body {
 
 
 
-.login-container .card:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    transform: translateY(-5px);
+.login-container .card {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
+
 
 .login-container .card-header {
     padding: 1.5rem;
@@ -384,8 +383,8 @@ body {
 }
 
 .login-container .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.25);
+    transform: none; 
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.15); 
 }
 
 .login-container a {

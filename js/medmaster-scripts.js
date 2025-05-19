@@ -11,6 +11,46 @@ jQuery(document).ready(function($) {
         
         return $alert;
     }
+
+    jQuery(document).ready(function($) {
+    
+    // טיפול בכפתור "קרא עוד" - גרסה משופרת
+    $(document).on('click', '.read-more-toggle', function(e) {
+        e.preventDefault();
+        var $button = $(this);
+        var $content = $button.closest('.update-content');
+        var $excerpt = $content.find('.excerpt-content');
+        var $fullContent = $content.find('.full-content');
+        
+        if ($excerpt.is(':visible')) {
+            $excerpt.hide();
+            $fullContent.show();
+            $button.html('סגור <i class="bi bi-caret-up-fill"></i>');
+        } else {
+            $fullContent.hide();
+            $excerpt.show();
+            $button.html('קרא עוד <i class="bi bi-caret-down-fill"></i>');
+        }
+    });
+    
+    // וידוא שהפונקציה לא מופעלת כפול
+    $('.read-more-toggle').off('click').on('click', function(e) {
+        e.preventDefault();
+        var $content = $(this).closest('.update-content');
+        var $excerpt = $content.find('.excerpt-content');
+        var $fullContent = $content.find('.full-content');
+        
+        if ($excerpt.is(':visible')) {
+            $excerpt.hide();
+            $fullContent.show();
+            $(this).html('סגור <i class="bi bi-caret-up-fill"></i>');
+        } else {
+            $fullContent.hide();
+            $excerpt.show();
+            $(this).html('קרא עוד <i class="bi bi-caret-down-fill"></i>');
+        }
+    });
+});
     
     // טיפול בסימון עדכון כנקרא כאשר המשתמש גולל לסוף העדכון
     function setupReadTracking() {
