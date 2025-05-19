@@ -248,7 +248,7 @@ if ($is_admin) :
     </div>
 </div>
 
-<!-- מודל ניהול משתמשים -->
+<!-- תיקון מודל ניהול משתמשים -->
 <div class="modal fade" data-bs-backdrop="false" id="manageUsersModal" tabindex="-1" aria-labelledby="manageUsersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -267,30 +267,46 @@ if ($is_admin) :
                                 <th>פעולות</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="users-table-body">
                             <?php
-                            $all_users = get_users(array('fields' => array('ID', 'display_name', 'user_email', 'roles')));
-                            foreach ($all_users as $user_item) {
-                                // בדיקה שיש לו רולים
-                                if (!isset($user_item->roles) || !is_array($user_item->roles)) {
-                                    continue;
-                                }
-                                
-                                if (in_array('administrator', $user_item->roles) || in_array('representative', $user_item->roles)) {
-                                    $role_display = in_array('administrator', $user_item->roles) ? 'מנהל' : 'נציג';
-                                    echo '<tr data-user-id="' . $user_item->ID . '">';
-                                    echo '<td>' . esc_html($user_item->display_name) . '</td>';
-                                    echo '<td>' . esc_html($user_item->user_email) . '</td>';
-                                    echo '<td>' . $role_display . '</td>';
-                                    echo '<td class="d-flex">';
-                                    echo '<button class="btn btn-sm btn-outline-secondary me-1 reset-password-btn" title="שנה סיסמה" data-bs-toggle="modal" data-bs-target="#resetPasswordModal" data-user-id="' . $user_item->ID . '" data-user-name="' . esc_attr($user_item->display_name) . '"><i class="bi bi-key"></i></button>';
+                            $all_users = get_users(array(
+                                'meta_query' => array(
+                                    'relation' => 'OR',
+                                    array(
+                                        'key' => 'wp_capabilities',
+                                        'value' => 'administrator',
+                                        'compare' => 'LIKE'
+                                    ),
+                                    array(
+                                        'key' => 'wp_capabilities',
+                                        'value' => 'representative',
+                                        'compare' => 'LIKE'
+                                    )
+                                )
+                            ));
+                            
+                            if (empty($all_users)) {
+                                echo '<tr><td colspan="4" class="text-center">לא נמצאו משתמשים</td></tr>';
+                            } else {
+                                foreach ($all_users as $user_item) {
+                                    $user_roles = get_userdata($user_item->ID)->roles;
                                     
-                                    if ($current_user->ID != $user_item->ID) { // לא ניתן למחוק את עצמך
-                                        echo '<button class="btn btn-sm btn-outline-danger delete-user-btn" title="מחק משתמש" data-user-id="' . $user_item->ID . '" data-user-name="' . esc_attr($user_item->display_name) . '"><i class="bi bi-trash"></i></button>';
+                                    if (in_array('administrator', $user_roles) || in_array('representative', $user_roles)) {
+                                        $role_display = in_array('administrator', $user_roles) ? 'מנהל' : 'נציג';
+                                        echo '<tr data-user-id="' . $user_item->ID . '">';
+                                        echo '<td>' . esc_html($user_item->display_name) . '</td>';
+                                        echo '<td>' . esc_html($user_item->user_email) . '</td>';
+                                        echo '<td>' . $role_display . '</td>';
+                                        echo '<td>';
+                                        echo '<button class="btn btn-sm btn-outline-secondary me-1 reset-password-btn" title="שנה סיסמה" data-user-id="' . $user_item->ID . '" data-user-name="' . esc_attr($user_item->display_name) . '"><i class="bi bi-key"></i></button>';
+                                        
+                                        if ($current_user->ID != $user_item->ID) {
+                                            echo '<button class="btn btn-sm btn-outline-danger delete-user-btn" title="מחק משתמש" data-user-id="' . $user_item->ID . '" data-user-name="' . esc_attr($user_item->display_name) . '"><i class="bi bi-trash"></i></button>';
+                                        }
+                                        
+                                        echo '</td>';
+                                        echo '</tr>';
                                     }
-                                    
-                                    echo '</td>';
-                                    echo '</tr>';
                                 }
                             }
                             ?>
@@ -814,40 +830,60 @@ jQuery(document).ready(function($) {
     });
     <?php endif; ?>
     
-    // טיפול בצ'קבוקס "קראתי"
-    $('.mark-as-read-checkbox').on('change', function() {
-        var $checkbox = $(this);
-        var updateId = $checkbox.data('update-id');
-        
-        if ($checkbox.is(':checked') && !$checkbox.is(':disabled')) {
-            $.ajax({
-                url: medmaster_ajax.ajax_url,
-                type: 'POST',
-                data: {
-                    action: 'medmaster_ajax_mark_as_read',
-                    update_id: updateId,
-                    security: $('input[name="security"]:first').val()
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // העדכון סומן כנקרא בהצלחה
-                        $checkbox.prop('disabled', true);
-                    } else {
-                        // שחזור מצב הצ'קבוקס במקרה של שגיאה
-                        $checkbox.prop('checked', false);
-                        alert(response.data.message);
-                    }
-                },
-                error: function() {
-                    // שחזור מצב הצ'קבוקס במקרה של שגיאה
+   
+   $('.mark-as-read-checkbox').on('change', function() {
+    var $checkbox = $(this);
+    var updateId = $checkbox.data('update-id');
+    
+    if ($checkbox.is(':checked') && !$checkbox.is(':disabled')) {
+        $.ajax({
+            url: medmaster_ajax.ajax_url,
+            type: 'POST',
+            data: {
+                action: 'medmaster_mark_as_read',
+                update_id: updateId,
+                nonce: medmaster_ajax.nonce 
+            },
+            success: function(response) {
+                if (response.success) {
+                   
+                    $checkbox.prop('disabled', true);
+                } else {
+                  
                     $checkbox.prop('checked', false);
-                    alert('שגיאת שרת. אנא נסה שוב מאוחר יותר.');
+                    alert(response.data.message);
                 }
+            },
+            error: function() {
+               
+                $checkbox.prop('checked', false);
+                alert('שגיאת שרת. אנא נסה שוב מאוחר יותר.');
+            }
+        });
+    }
+});
+    
+$(document).ready(function() {
+    // הסרת מאזינים קיימים ויצירת חדשים
+    $(document).off('click', '.read-more-toggle').on('click', '.read-more-toggle', function(e) {
+        e.preventDefault();
+        var $content = $(this).closest('.update-content');
+        var $excerpt = $content.find('.excerpt-content');
+        var $fullContent = $content.find('.full-content');
+        
+        if ($excerpt.is(':visible')) {
+            $excerpt.slideUp(300, function() {
+                $fullContent.slideDown(300);
             });
+            $(this).html('סגור <i class="bi bi-caret-up-fill"></i>');
+        } else {
+            $fullContent.slideUp(300, function() {
+                $excerpt.slideDown(300);
+            });
+            $(this).html('קרא עוד <i class="bi bi-caret-down-fill"></i>');
         }
     });
-    
-    // טיפול בכפתור "קרא עוד"
+});
     $('.read-more-toggle').on('click', function(e) {
         e.preventDefault();
         var $content = $(this).closest('.update-content');
