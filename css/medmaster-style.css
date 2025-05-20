@@ -64,8 +64,6 @@ body {
     width: 100%;
 }
 
-
-
 .update-card-wrapper .card-body {
     padding: 1.5rem;
 }
@@ -352,15 +350,10 @@ body {
     }
 }
 
-
-
-
 .login-container .card {
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-
-
 
 .login-container .card-header {
     padding: 1.5rem;
@@ -397,4 +390,55 @@ body {
 
 .site-title{
     visibility: hidden;
+}
+
+/* תיקון למיקום צ'קבוקס "קראתי" במצב RTL */
+.rtl .form-check {
+    padding-right: 1.5em;
+    padding-left: 0;
+    text-align: right;
+}
+
+.rtl .form-check .form-check-input {
+    float: right;
+    margin-right: -1.5em;
+    margin-left: 0;
+}
+
+.rtl .form-check-label {
+    display: block;
+    padding-right: 0.5em;
+}
+
+/* תיקון למיקום כפתור סגירה במודלים */
+.rtl .modal-header {
+    display: flex;
+    flex-direction: row-reverse;
+    position: relative;
+}
+
+.rtl .modal-header .btn-close {
+    position: absolute;
+    right: 1rem;
+    margin: 0;
+}
+
+.rtl .modal-header .modal-title {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding-right: 2rem;
+}
+
+/* וידוא שהכפתור לא יעלה על הטקסט */
+.rtl .modal-header .close-btn {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    z-index: 10;
 }
