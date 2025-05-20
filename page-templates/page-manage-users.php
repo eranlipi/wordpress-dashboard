@@ -22,6 +22,14 @@ $current_user = wp_get_current_user();
                     <button type="button" class="close-btn" onclick="window.location.href='<?php echo get_permalink(get_page_by_path('dashboard')); ?>'">×</button>
                 </div>
                 <div class="card-body">
+                    <?php
+                    // בדוק אם יש משתמשים לפני יצירת הטבלה
+                    $all_users = get_users(array('role__in' => array('administrator', 'representative')));
+                    
+                    if (empty($all_users)) {
+                        echo '<div class="alert alert-info">לא נמצאו משתמשים במערכת.</div>';
+                    } else {
+                    ?>
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -33,28 +41,31 @@ $current_user = wp_get_current_user();
                         </thead>
                         <tbody>
                             <?php
-                            $all_users = get_users(array('fields' => array('ID', 'display_name', 'user_email', 'roles')));
                             foreach ($all_users as $user_item) {
-                                if (in_array('administrator', $user_item->roles) || in_array('representative', $user_item->roles)) {
-                                    $role_display = in_array('administrator', $user_item->roles) ? 'מנהל' : 'נציג';
-                                    echo '<tr data-user-id="' . $user_item->ID . '">';
-                                    echo '<td>' . esc_html($user_item->display_name) . '</td>';
-                                    echo '<td>' . esc_html($user_item->user_email) . '</td>';
-                                    echo '<td>' . $role_display . '</td>';
-                                    echo '<td>';
-                                    echo '<button class="btn btn-sm btn-outline-secondary reset-password-btn me-1" title="שנה סיסמה"><i class="bi bi-key"></i></button>';
-                                    
-                                    if ($current_user->ID != $user_item->ID) { // לא ניתן למחוק את עצמך
-                                        echo '<button class="btn btn-sm btn-outline-danger delete-user-btn" title="מחק משתמש"><i class="bi bi-trash"></i></button>';
-                                    }
-                                    
-                                    echo '</td>';
-                                    echo '</tr>';
+                                // וודא שיש למשתמש תפקידים מוגדרים
+                                if (!isset($user_item->roles) || !is_array($user_item->roles)) {
+                                    continue;
                                 }
+                                
+                                $role_display = in_array('administrator', $user_item->roles) ? 'מנהל' : 'נציג';
+                                echo '<tr data-user-id="' . $user_item->ID . '">';
+                                echo '<td>' . esc_html($user_item->display_name) . '</td>';
+                                echo '<td>' . esc_html($user_item->user_email) . '</td>';
+                                echo '<td>' . $role_display . '</td>';
+                                echo '<td class="d-flex">';
+                                echo '<button class="btn btn-sm btn-outline-secondary reset-password-btn me-1" title="שנה סיסמה" data-bs-toggle="modal" data-bs-target="#resetPasswordModal" data-user-id="' . $user_item->ID . '" data-user-name="' . esc_attr($user_item->display_name) . '"><i class="bi bi-key"></i></button>';
+                                
+                                if ($current_user->ID != $user_item->ID) { // לא ניתן למחוק את עצמך
+                                    echo '<button class="btn btn-sm btn-outline-danger delete-user-btn" title="מחק משתמש" data-user-id="' . $user_item->ID . '" data-user-name="' . esc_attr($user_item->display_name) . '"><i class="bi bi-trash"></i></button>';
+                                }
+                                
+                                echo '</td>';
+                                echo '</tr>';
                             }
                             ?>
                         </tbody>
                     </table>
+                    <?php } ?>
                     
                     <div class="mt-3 text-end">
                         <a href="<?php echo get_permalink(get_page_by_path('add-user')); ?>" class="btn btn-success">
@@ -99,11 +110,15 @@ $current_user = wp_get_current_user();
 
 <script>
 jQuery(document).ready(function($) {
+    console.log('Page manage users script loaded'); // הוספת לוג לבדיקה
+    
     // כפתור מחיקת משתמש
     $('.delete-user-btn').on('click', function() {
         const userRow = $(this).closest('tr');
         const userId = userRow.data('user-id');
         const userName = userRow.find('td').first().text().trim();
+        
+        console.log('Delete user clicked:', userId, userName); // הוספת לוג לבדיקה
         
         if (confirm(`האם אתה בטוח שברצונך למחוק את המשתמש "${userName}"? פעולה זו אינה ניתנת לביטול.`)) {
             $.ajax({
@@ -115,18 +130,21 @@ jQuery(document).ready(function($) {
                     nonce: medmaster_ajax.nonce
                 },
                 success: function(response) {
+                    console.log('Delete user response:', response); // הוספת לוג לבדיקה
+                    
                     if (response.success) {
                         userRow.fadeOut(400, function() {
                             userRow.remove();
                         });
                         $('#user-management-message').html('<div class="alert alert-success">' + 
-                            response.data.message || 'המשתמש נמחק בהצלחה.' + '</div>');
+                            (response.data.message || 'המשתמש נמחק בהצלחה.') + '</div>');
                     } else {
                         $('#user-management-message').html('<div class="alert alert-danger">' + 
-                            response.data.message || 'שגיאה במחיקת המשתמש.' + '</div>');
+                            (response.data.message || 'שגיאה במחיקת המשתמש.') + '</div>');
                     }
                 },
-                error: function() {
+                error: function(xhr, status, error) {
+                    console.error('Delete user error:', error, xhr.responseText); // הוספת לוג לבדיקה
                     $('#user-management-message').html('<div class="alert alert-danger">שגיאת שרת במחיקת המשתמש.</div>');
                 }
             });
@@ -138,6 +156,8 @@ jQuery(document).ready(function($) {
         const userRow = $(this).closest('tr');
         const userId = userRow.data('user-id');
         const userName = userRow.find('td').first().text().trim();
+        
+        console.log('Reset password clicked:', userId, userName); // הוספת לוג לבדיקה
         
         $('#resetPasswordModalLabel').text(`שינוי סיסמה: ${userName}`);
         $('#reset_user_id').val(userId);
@@ -155,6 +175,8 @@ jQuery(document).ready(function($) {
         const userId = $('#reset_user_id').val();
         const newPassword = $('#new_password').val();
         
+        console.log('Reset password form submitted:', userId); // הוספת לוג לבדיקה
+        
         if (!userId || !newPassword) {
             $('#reset-password-message').html('<div class="alert alert-danger">נא למלא את כל השדות.</div>');
             return;
@@ -170,9 +192,11 @@ jQuery(document).ready(function($) {
                 nonce: medmaster_ajax.nonce
             },
             success: function(response) {
+                console.log('Reset password response:', response); // הוספת לוג לבדיקה
+                
                 if (response.success) {
                     $('#reset-password-message').html('<div class="alert alert-success">' + 
-                        response.data.message || 'הסיסמה שונתה בהצלחה.' + '</div>');
+                        (response.data.message || 'הסיסמה שונתה בהצלחה.') + '</div>');
                     
                     // סגירת המודל אחרי 2 שניות
                     setTimeout(function() {
@@ -180,10 +204,11 @@ jQuery(document).ready(function($) {
                     }, 2000);
                 } else {
                     $('#reset-password-message').html('<div class="alert alert-danger">' + 
-                        response.data.message || 'שגיאה בשינוי הסיסמה.' + '</div>');
+                        (response.data.message || 'שגיאה בשינוי הסיסמה.') + '</div>');
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error('Reset password error:', error, xhr.responseText); // הוספת לוג לבדיקה
                 $('#reset-password-message').html('<div class="alert alert-danger">שגיאת שרת בשינוי הסיסמה.</div>');
             }
         });

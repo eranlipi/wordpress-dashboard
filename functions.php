@@ -670,4 +670,80 @@ function medmaster_enqueue_fixes() {
 }
 add_action('wp_enqueue_scripts', 'medmaster_enqueue_fixes', 20);
 
+// =====================================================
+// תיקון לטבלת ניהול משתמשים
+// =====================================================
+
+function medmaster_refresh_users_table() {
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'medmaster_ajax_nonce')) {
+        wp_send_json_error(['message' => 'בדיקת אבטחה נכשלה']);
+        wp_die();
+    }
+    
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'אין לך הרשאות לצפות במשתמשים']);
+        wp_die();
+    }
+    
+    $current_user = wp_get_current_user();
+    
+    ob_start();
+    ?>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>שם</th>
+                <th>אימייל</th>
+                <th>סוג משתמש</th>
+                <th>פעולות</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            // הורדתי את פרמטר 'fields' כדי לקבל את כל המידע על המשתמשים
+            $all_users = get_users();
+            $found_users = false;
+            
+            foreach ($all_users as $user_item) {
+                // בדיקה אם המשתמש הוא מנהל או נציג
+                if (in_array('administrator', $user_item->roles) || in_array('representative', $user_item->roles)) {
+                    $found_users = true;
+                    $role_display = in_array('administrator', $user_item->roles) ? 'מנהל' : 'נציג';
+                    ?>
+                    <tr data-user-id="<?php echo $user_item->ID; ?>">
+                        <td><?php echo esc_html($user_item->display_name); ?></td>
+                        <td><?php echo esc_html($user_item->user_email); ?></td>
+                        <td><?php echo $role_display; ?></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-secondary reset-password-btn me-1" title="שנה סיסמה" data-user-id="<?php echo $user_item->ID; ?>" data-user-name="<?php echo esc_attr($user_item->display_name); ?>">
+                                <i class="bi bi-key"></i>
+                            </button>
+                            
+                            <?php if ($current_user->ID != $user_item->ID) : ?>
+                                <button class="btn btn-sm btn-outline-danger delete-user-btn" title="מחק משתמש" data-user-id="<?php echo $user_item->ID; ?>" data-user-name="<?php echo esc_attr($user_item->display_name); ?>">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            }
+            
+            if (!$found_users) {
+                ?>
+                <tr>
+                    <td colspan="4" class="text-center">לא נמצאו משתמשים במערכת</td>
+                </tr>
+                <?php
+            }
+            ?>
+        </tbody>
+    </table>
+    <?php
+    $html = ob_get_clean();
+    wp_send_json_success($html);
+    wp_die();
+}
+add_action('wp_ajax_medmaster_refresh_users_table', 'medmaster_refresh_users_table');
 ?>

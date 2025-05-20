@@ -22,17 +22,17 @@ $is_admin = current_user_can('manage_options');
     <div class="row w-100">
         <div class="col-12">
             <header class="mb-4 d-flex justify-content-between align-items-center">
-                <h1>Latest Updates</h1>
+                <h1>עדכונים אחרונים</h1>
                 <?php if ($is_admin) : ?>
                     <div class="admin-actions">
                         <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addUpdateModal">
-                            <i class="bi bi-plus-circle"></i> Add Update
+                            <i class="bi bi-plus-circle"></i> הוסף עדכון
                         </button>
                         <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                            <i class="bi bi-person-plus"></i> Add User
+                            <i class="bi bi-person-plus"></i> הוסף משתמש
                         </button>
                         <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#manageUsersModal">
-                            <i class="bi bi-people"></i> Manage Users
+                            <i class="bi bi-people"></i> ניהול משתמשים
                         </button>
                     </div>
                 <?php endif; ?>
@@ -84,10 +84,10 @@ $is_admin = current_user_can('manage_options');
                                         <?php the_title(); ?>
                                         <?php if ($is_admin) : ?>
                                             <div class="admin-update-actions">
-                                                <button class="btn btn-sm btn-outline-secondary me-1 edit-update-btn" title="Edit Update">
+                                                <button class="btn btn-sm btn-outline-secondary me-1 edit-update-btn" title="ערוך עדכון">
                                                     <i class="bi bi-pencil-fill"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-outline-danger delete-update-btn" title="Delete Update">
+                                                <button class="btn btn-sm btn-outline-danger delete-update-btn" title="מחק עדכון">
                                                     <i class="bi bi-trash-fill"></i>
                                                 </button>
                                             </div>
@@ -98,7 +98,7 @@ $is_admin = current_user_can('manage_options');
                                         <span class="publish-date">
                                             <?php echo $publish_date; ?>
                                             <?php if ($is_admin && $is_future_post) : ?>
-                                                <span class="badge bg-warning text-dark ms-1">Scheduled (<?php echo get_the_date('d/m/Y H:i', $update_id); ?>)</span>
+                                                <span class="badge bg-warning text-dark ms-1">מתוזמן (<?php echo get_the_date('d/m/Y H:i', $update_id); ?>)</span>
                                             <?php endif; ?>
                                         </span>
                                     </p>
@@ -106,7 +106,7 @@ $is_admin = current_user_can('manage_options');
                                         <?php if ($has_more) : ?>
                                             <div class="excerpt-content"><?php echo wpautop($excerpt); ?></div>
                                             <div class="full-content" style="display:none;"><?php echo wpautop($content); ?></div>
-                                            <a href="#" class="read-more-toggle small">Read more <i class="bi bi-caret-down-fill"></i></a>
+                                            <a href="#" class="read-more-toggle small">קרא עוד <i class="bi bi-caret-down-fill"></i></a>
                                         <?php else : ?>
                                             <?php echo wpautop($content); ?>
                                         <?php endif; ?>
@@ -120,7 +120,7 @@ $is_admin = current_user_can('manage_options');
                                                 data-bs-toggle="modal" data-bs-target="#readStatusModal"
                                                 data-update-id="<?php echo $update_id; ?>"
                                                 data-update-title="<?php echo esc_attr(get_the_title()); ?>">
-                                            <i class="bi bi-eye"></i> <?php printf('%d/%d Read', $read_count, $total_reps); ?>
+                                            <i class="bi bi-eye"></i> <?php printf('%d/%d נקרא', $read_count, $total_reps); ?>
                                         </button>
                                     <?php else :
                                         $has_read = medmaster_has_user_read_update($current_user->ID, $update_id);
@@ -131,7 +131,7 @@ $is_admin = current_user_can('manage_options');
                                                 data-update-id="<?php echo $update_id; ?>"
                                                 <?php checked($has_read); ?> <?php disabled($has_read); ?>>
                                             <label class="form-check-label" for="readCheck-<?php echo $update_id; ?>">
-                                                I have read this
+                                                קראתי את זה
                                             </label>
                                         </div>
                                     <?php endif; ?>
@@ -147,15 +147,15 @@ $is_admin = current_user_can('manage_options');
                         'format' => '?paged=%#%',
                         'current' => max(1, get_query_var('paged')),
                         'total' => $updates_query->max_num_pages,
-                        'prev_text' => '« Previous',
-                        'next_text' => 'Next »',
+                        'prev_text' => '« הקודם',
+                        'next_text' => 'הבא »',
                         'type'  => 'list',
                     ));
                     echo '</div>';
 
                     wp_reset_postdata();
                 else :
-                    echo '<div class="col-12"><div class="alert alert-info">No updates found.</div></div>';
+                    echo '<div class="col-12"><div class="alert alert-info">לא נמצאו עדכונים.</div></div>';
                 endif;
                 ?>
             </div>
@@ -168,26 +168,26 @@ $is_admin = current_user_can('manage_options');
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Login to System</h5>
+                <h5 class="modal-title" id="loginModalLabel">התחברות למערכת</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="login-form">
                     <div class="mb-3">
-                        <label for="user_login" class="form-label">Email</label>
+                        <label for="user_login" class="form-label">אימייל</label>
                         <input type="text" class="form-control" id="user_login" name="user_login" required>
                     </div>
                     <div class="mb-3">
-                        <label for="user_password" class="form-label">Password</label>
+                        <label for="user_password" class="form-label">סיסמה</label>
                         <input type="password" class="form-control" id="user_password" name="user_password" required>
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
-                        <label class="form-check-label" for="remember_me">Remember me</label>
+                        <label class="form-check-label" for="remember_me">זכור אותי</label>
                     </div>
                     <div class="alert" id="login-message" style="display: none;"></div>
                     <?php wp_nonce_field('medmaster_ajax_nonce', 'security'); ?>
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                    <button type="submit" class="btn btn-primary w-100">התחבר</button>
                 </form>
             </div>
         </div>
@@ -200,32 +200,32 @@ $is_admin = current_user_can('manage_options');
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                <h5 class="modal-title" id="addUserModalLabel">הוסף משתמש חדש</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="add-user-form">
                     <div class="mb-3">
-                        <label for="user_name" class="form-label">Name</label>
+                        <label for="user_name" class="form-label">שם</label>
                         <input type="text" class="form-control" id="user_name" name="user_name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="user_email" class="form-label">Email</label>
+                        <label for="user_email" class="form-label">אימייל</label>
                         <input type="email" class="form-control" id="user_email" name="user_email" required>
                     </div>
                     <div class="mb-3">
-                        <label for="user_password" class="form-label">Password</label>
+                        <label for="user_password" class="form-label">סיסמה</label>
                         <input type="password" class="form-control" id="user_password" name="user_password" required>
                     </div>
                     <div class="mb-3">
-                        <label for="user_role" class="form-label">User Type</label>
+                        <label for="user_role" class="form-label">סוג משתמש</label>
                         <select class="form-select" id="user_role" name="user_role">
-                            <option value="representative">Representative</option>
-                            <option value="administrator">Administrator</option>
+                            <option value="representative">נציג</option>
+                            <option value="administrator">מנהל</option>
                         </select>
                     </div>
                     <div class="alert" id="add-user-message" style="display: none;"></div>
-                    <button type="submit" class="btn btn-primary w-100">Add User</button>
+                    <button type="submit" class="btn btn-primary w-100">הוסף משתמש</button>
                 </form>
             </div>
         </div>
@@ -236,54 +236,23 @@ $is_admin = current_user_can('manage_options');
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="manageUsersModalLabel">Manage Users</h5>
+                <h5 class="modal-title" id="manageUsersModalLabel">ניהול משתמשים</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div id="users-table-container">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>User Type</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $all_users = get_users(array('fields' => array('ID', 'display_name', 'user_email', 'roles')));
-                            foreach ($all_users as $user_item) {
-                                if (!isset($user_item->roles) || !is_array($user_item->roles)) {
-                                    continue;
-                                }
-                                
-                                if (in_array('administrator', $user_item->roles) || in_array('representative', $user_item->roles)) {
-                                    $role_display = in_array('administrator', $user_item->roles) ? 'Administrator' : 'Representative';
-                                    echo '<tr data-user-id="' . $user_item->ID . '">';
-                                    echo '<td>' . esc_html($user_item->display_name) . '</td>';
-                                    echo '<td>' . esc_html($user_item->user_email) . '</td>';
-                                    echo '<td>' . $role_display . '</td>';
-                                    echo '<td class="d-flex">';
-                                    echo '<button class="btn btn-sm btn-outline-secondary me-1 reset-password-btn" title="Reset Password" data-bs-toggle="modal" data-bs-target="#resetPasswordModal" data-user-id="' . $user_item->ID . '" data-user-name="' . esc_attr($user_item->display_name) . '"><i class="bi bi-key"></i></button>';
-                                    
-                                    if ($current_user->ID != $user_item->ID) {
-                                        echo '<button class="btn btn-sm btn-outline-danger delete-user-btn" title="Delete User" data-user-id="' . $user_item->ID . '" data-user-name="' . esc_attr($user_item->display_name) . '"><i class="bi bi-trash"></i></button>';
-                                    }
-                                    
-                                    echo '</td>';
-                                    echo '</tr>';
-                                }
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p>טוען משתמשים...</p>
+                    </div>
                 </div>
-                <div class="alert" id="users-message" style="display: none;"></div>
+                <div id="user-management-message" class="mt-3"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">Add New User</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">סגור</button>
+                <a href="<?php echo get_permalink(get_page_by_path('add-user')); ?>" class="btn btn-success">
+                    <i class="bi bi-person-plus"></i> הוסף משתמש חדש
+                </a>
             </div>
         </div>
     </div>
@@ -293,18 +262,18 @@ $is_admin = current_user_can('manage_options');
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="resetPasswordModalLabel">Reset Password</h5>
+                <h5 class="modal-title" id="resetPasswordModalLabel">שינוי סיסמה</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="reset-password-form">
                     <input type="hidden" id="reset_user_id" name="user_id" value="">
                     <div class="mb-3">
-                        <label for="new_password" class="form-label">New Password</label>
+                        <label for="new_password" class="form-label">סיסמה חדשה</label>
                         <input type="password" class="form-control" id="new_password" name="new_password" required>
                     </div>
                     <div class="alert" id="reset-password-message" style="display: none;"></div>
-                    <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+                    <button type="submit" class="btn btn-primary w-100">שנה סיסמה</button>
                 </form>
             </div>
         </div>
@@ -315,21 +284,21 @@ $is_admin = current_user_can('manage_options');
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addUpdateModalLabel">Add New Update</h5>
+                <h5 class="modal-title" id="addUpdateModalLabel">הוסף עדכון חדש</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="add-update-form">
                     <div class="mb-3">
-                        <label for="update_title" class="form-label">Title</label>
+                        <label for="update_title" class="form-label">כותרת</label>
                         <input type="text" class="form-control" id="update_title" name="update_title" required>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="update_tag" class="form-label">Tag</label>
+                        <label for="update_tag" class="form-label">תגית</label>
                         <div class="d-flex">
                             <select class="form-select me-2" id="update_tag" name="update_tag">
-                                <option value="">Select Tag</option>
+                                <option value="">בחר תגית</option>
                                 <?php 
                                 $update_tags = get_terms(array(
                                     'taxonomy' => 'update_tag',
@@ -339,34 +308,34 @@ $is_admin = current_user_can('manage_options');
                                     <option value="<?php echo $tag->term_id; ?>"><?php echo $tag->name; ?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <button type="button" class="btn btn-outline-secondary" id="add-new-tag-btn">New Tag</button>
+                            <button type="button" class="btn btn-outline-secondary" id="add-new-tag-btn">תגית חדשה</button>
                         </div>
                     </div>
                     
                     <div class="mb-3" id="new-tag-container" style="display: none;">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="new_tag_name" class="form-label">Tag Name</label>
-                                <input type="text" class="form-control" id="new_tag_name" placeholder="Tag name">
+                                <label for="new_tag_name" class="form-label">שם התגית</label>
+                                <input type="text" class="form-control" id="new_tag_name" placeholder="שם התגית">
                             </div>
                             <div class="col-md-4">
-                                <label for="new_tag_color" class="form-label">Color</label>
+                                <label for="new_tag_color" class="form-label">צבע</label>
                                 <input type="color" class="form-control form-control-color" id="new_tag_color" value="#0d6efd">
                             </div>
                             <div class="col-md-2 d-flex align-items-end">
-                                <button class="btn btn-primary w-100" type="button" id="save-new-tag-btn">Save</button>
+                                <button class="btn btn-primary w-100" type="button" id="save-new-tag-btn">שמור</button>
                             </div>
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="update_publish_date" class="form-label">Publish Date</label>
+                        <label for="update_publish_date" class="form-label">תאריך פרסום</label>
                         <input type="date" class="form-control" id="update_publish_date" name="update_publish_date" min="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>">
-                        <small class="form-text text-muted">Leave as current date for immediate publish or set future date for automatic publishing.</small>
+                        <small class="form-text text-muted">השאר כתאריך נוכחי לפרסום מיידי או קבע תאריך עתידי לפרסום אוטומטי.</small>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="update_content" class="form-label">Content</label>
+                        <label for="update_content" class="form-label">תוכן</label>
                         <textarea class="form-control" id="update_content" name="update_content" rows="6" required></textarea>
                     </div>
                     
@@ -374,8 +343,8 @@ $is_admin = current_user_can('manage_options');
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="add-update-submit">Add Update</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ביטול</button>
+                <button type="button" class="btn btn-primary" id="add-update-submit">הוסף עדכון</button>
             </div>
         </div>
     </div>
@@ -385,16 +354,16 @@ $is_admin = current_user_can('manage_options');
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="readStatusModalLabel">Read Status: <span id="readStatusUpdateTitle"></span></h5>
+                <h5 class="modal-title" id="readStatusModalLabel">סטטוס קריאה: <span id="readStatusUpdateTitle"></span></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div id="read-status-content">
-                    <p>Loading data...</p>
+                    <p>טוען נתונים...</p>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">סגור</button>
             </div>
         </div>
     </div>
@@ -417,7 +386,7 @@ jQuery(document).ready(function($) {
         
         $message.removeClass('alert-danger alert-success')
                 .addClass('alert-info')
-                .html(medmaster_ajax.loading_message)
+                .html('מתחבר למערכת, אנא המתן...')
                 .show();
         
         $.ajax({
@@ -442,7 +411,7 @@ jQuery(document).ready(function($) {
                 }
             },
             error: function() {
-                $message.removeClass('alert-info').addClass('alert-danger').html('Server error. Please try again later.');
+                $message.removeClass('alert-info').addClass('alert-danger').html('שגיאת שרת. אנא נסה שוב מאוחר יותר.');
             }
         });
     });
@@ -465,7 +434,7 @@ jQuery(document).ready(function($) {
         
         $message.removeClass('alert-danger alert-success')
                 .addClass('alert-info')
-                .html(medmaster_ajax.loading_message)
+                .html('מוסיף משתמש...')
                 .show();
         
         $.ajax({
@@ -490,7 +459,7 @@ jQuery(document).ready(function($) {
             },
             error: function(xhr, status, error) {
                 console.error('AJAX Error:', xhr.responseText);
-                $message.removeClass('alert-info').addClass('alert-danger').html('Server error: ' + error);
+                $message.removeClass('alert-info').addClass('alert-danger').html('שגיאת שרת: ' + error);
             }
         });
     });
@@ -499,12 +468,12 @@ jQuery(document).ready(function($) {
         var userId = $(this).data('user-id');
         var userName = $(this).data('user-name');
         
-        if (confirm('Are you sure you want to delete user "' + userName + '"?')) {
+        if (confirm('האם אתה בטוח שברצונך למחוק את המשתמש "' + userName + '"?')) {
             var $message = $('#users-message');
             
             $message.removeClass('alert-danger alert-success')
                     .addClass('alert-info')
-                    .html(medmaster_ajax.loading_message)
+                    .html('מוחק משתמש...')
                     .show();
             
             $.ajax({
@@ -527,7 +496,7 @@ jQuery(document).ready(function($) {
                     }
                 },
                 error: function() {
-                    $message.removeClass('alert-info').addClass('alert-danger').html('Server error. Please try again later.');
+                    $message.removeClass('alert-info').addClass('alert-danger').html('שגיאת שרת. אנא נסה שוב מאוחר יותר.');
                 }
             });
         }
@@ -537,7 +506,7 @@ jQuery(document).ready(function($) {
         var userId = $(this).data('user-id');
         var userName = $(this).data('user-name');
         
-        $('#resetPasswordModalLabel').text('Reset Password: ' + userName);
+        $('#resetPasswordModalLabel').text('שינוי סיסמה: ' + userName);
         $('#reset_user_id').val(userId);
     });
     
@@ -549,7 +518,7 @@ jQuery(document).ready(function($) {
         
         $message.removeClass('alert-danger alert-success')
                 .addClass('alert-info')
-                .html(medmaster_ajax.loading_message)
+                .html('משנה סיסמה...')
                 .show();
         
         $.ajax({
@@ -577,7 +546,7 @@ jQuery(document).ready(function($) {
                 }
             },
             error: function() {
-                $message.removeClass('alert-info').addClass('alert-danger').html('Server error. Please try again later.');
+                $message.removeClass('alert-info').addClass('alert-danger').html('שגיאת שרת. אנא נסה שוב מאוחר יותר.');
             }
         });
     });
@@ -591,7 +560,7 @@ jQuery(document).ready(function($) {
         var tagColor = $('#new_tag_color').val();
         
         if (!tagName) {
-            alert('Please enter a tag name');
+            alert('נא להזין שם תגית');
             return;
         }
         
@@ -606,237 +575,236 @@ jQuery(document).ready(function($) {
             },
             success: function(response) {
                 if (response.success) {
-                    $('#update_tag').append(new Option(response.data.name, response.data.term_id, true, true));
-                    
-                    $('#new_tag_name').val('');
-                    $('#new_tag_color').val('#0d6efd');
-                    $('#new-tag-container').slideUp();
-                    
-                    alert('Tag created successfully');
-                } else {
-                    alert(response.data.message);
-                }
-            },
-            error: function() {
-                alert('Server error. Please try again later.');
-            }
-        });
-    });
-    
-    $('#add-update-submit').on('click', function() {
-        var $form = $('#add-update-form');
-        var $message = $('#add-update-message');
-        
-        var title = $('#update_title').val().trim();
-        var content = $('#update_content').val().trim();
-        
-        if (!title) {
-            alert('Please enter a title for the update');
-            return;
-        }
-        
-        if (!content) {
-            alert('Please enter content for the update');
-            return;
-        }
-        
-        $message.removeClass('alert-danger alert-success')
-                .addClass('alert-info')
-                .html(medmaster_ajax.loading_message)
-                .show();
-        
-        $.ajax({
-            url: medmaster_ajax.ajax_url,
-            type: 'POST',
-            data: {
-                action: 'medmaster_add_update',
-                update_title: title,
-                update_content: content,
-               update_tag: $('#update_tag').val(),
-               update_publish_date: $('#update_publish_date').val(),
-               nonce: medmaster_ajax.nonce
-           },
-           success: function(response) {
-               if (response.success) {
-                   $message.removeClass('alert-info').addClass('alert-success').html(response.data.message);
-                   $form[0].reset();
+                   $('#update_tag').append(new Option(response.data.name, response.data.term_id, true, true));
                    
-                   setTimeout(function() {
-                       var modal = bootstrap.Modal.getInstance(document.getElementById('addUpdateModal'));
-                       if (modal) {
-                           modal.hide();
-                       }
-                       location.reload();
-                   }, 2000);
+                   $('#new_tag_name').val('');
+                   $('#new_tag_color').val('#0d6efd');
+                   $('#new-tag-container').slideUp();
+                   
+                   alert('תגית נוצרה בהצלחה');
                } else {
-                   $message.removeClass('alert-info').addClass('alert-danger').html(response.data.message);
+                   alert(response.data.message);
                }
            },
            error: function() {
-               $message.removeClass('alert-info').addClass('alert-danger').html('Server error. Please try again later.');
+               alert('שגיאת שרת. אנא נסה שוב מאוחר יותר.');
            }
        });
    });
    
-   $('.view-read-status-btn').on('click', function() {
-       var updateId = $(this).data('update-id');
-       var updateTitle = $(this).data('update-title');
+   $('#add-update-submit').on('click', function() {
+       var $form = $('#add-update-form');
+       var $message = $('#add-update-message');
        
-       $('#readStatusUpdateTitle').text(updateTitle);
+       var title = $('#update_title').val().trim();
+       var content = $('#update_content').val().trim();
+       
+       if (!title) {
+           alert('נא להזין כותרת לעדכון');
+           return;
+       }
+       
+       if (!content) {
+           alert('נא להזין תוכן לעדכון');
+           return;
+       }
+       
+       $message.removeClass('alert-danger alert-success')
+               .addClass('alert-info')
+               .html('מוסיף עדכון...')
+               .show();
        
        $.ajax({
            url: medmaster_ajax.ajax_url,
            type: 'POST',
            data: {
-               action: 'medmaster_get_read_status',
-               update_id: updateId,
-               nonce: medmaster_ajax.nonce
-           },
-           success: function(response) {
-               if (response.success) {
-                   var usersData = response.data;
-                   var html = '<table class="table table-striped">';
-                   html += '<thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Read Time</th></tr></thead>';
-                   html += '<tbody>';
-                   
-                   if (usersData.length === 0) {
-                       html += '<tr><td colspan="4" class="text-center">No representatives in the system</td></tr>';
-                   } else {
-                       for (var i = 0; i < usersData.length; i++) {
-                           var user = usersData[i];
-                           var statusHtml = user.has_read 
-                               ? '<span class="text-success"><i class="bi bi-check-circle-fill"></i> Read</span>' 
-                               : '<span class="text-danger"><i class="bi bi-x-circle-fill"></i> Not Read</span>';
-                           
-                           html += '<tr>';
-                           html += '<td>' + user.name + '</td>';
-                           html += '<td>' + user.email + '</td>';
-                           html += '<td>' + statusHtml + '</td>';
-                           html += '<td>' + (user.read_timestamp || '---') + '</td>';
-                           html += '</tr>';
-                       }
-                   }
-                   
-                   html += '</tbody></table>';
-                   $('#read-status-content').html(html);
-               } else {
-                   $('#read-status-content').html('<div class="alert alert-danger">' + response.data.message + '</div>');
-               }
-           },
-           error: function() {
-               $('#read-status-content').html('<div class="alert alert-danger">Server error. Please try again later.</div>');
-           }
-       });
-   });
-   
-   $('.delete-update-btn').on('click', function() {
-       var $updateCard = $(this).closest('.update-card-wrapper');
-       var updateId = $updateCard.data('update-id');
-       var updateTitle = $updateCard.find('.card-title').text().trim();
-       
-       if (confirm('Are you sure you want to delete the update "' + updateTitle + '"?')) {
-           $.ajax({
-               url: medmaster_ajax.ajax_url,
-               type: 'POST',
-               data: {
-                   action: 'medmaster_delete_update',
-                   update_id: updateId,
-                   nonce: medmaster_ajax.nonce
-               },
-               success: function(response) {
-                   if (response.success) {
-                       $updateCard.fadeOut(500, function() {
-                           $(this).remove();
-                           
-                           $('#updates-list').prepend(
-                               '<div class="col-12 mb-3"><div class="alert alert-success">' + 
-                               response.data.message + 
-                               '</div></div>'
-                           );
-                           
-                           setTimeout(function() {
-                               $('#updates-list .alert').fadeOut(500, function() {
-                                   $(this).parent().remove();
-                               });
-                           }, 3000);
-                       });
-                   } else {
-                       alert(response.data.message);
-                   }
-               },
-               error: function() {
-                   alert('Server error. Please try again later.');
-               }
-           });
-       }
-   });
-   <?php endif; ?>
-   
-   $('.mark-as-read-checkbox').on('change', function() {
-       var $checkbox = $(this);
-       var updateId = $checkbox.data('update-id');
-       
-       if ($checkbox.is(':checked') && !$checkbox.is(':disabled')) {
-           $.ajax({
-               url: medmaster_ajax.ajax_url,
-               type: 'POST',
-               data: {
-                   action: 'medmaster_mark_as_read',
-                   update_id: updateId,
-                   nonce: medmaster_ajax.nonce
-               },
-               success: function(response) {
-                   if (response.success) {
-                       $checkbox.prop('disabled', true);
-                   } else {
-                       $checkbox.prop('checked', false);
-                       alert(response.data.message);
-                   }
-               },
-               error: function() {
-                   $checkbox.prop('checked', false);
-                   alert('Server error. Please try again later.');
-               }
-           });
-       }
-   });
-   
-   $('.read-more-toggle').on('click', function(e) {
-       e.preventDefault();
-       var $content = $(this).closest('.update-content');
-       var $excerpt = $content.find('.excerpt-content');
-       var $fullContent = $content.find('.full-content');
-       
-       if ($excerpt.is(':visible')) {
-           $excerpt.hide();
-           $fullContent.show();
-           $(this).html('Close <i class="bi bi-caret-up-fill"></i>');
-       } else {
-           $fullContent.hide();
-           $excerpt.show();
-           $(this).html('Read more <i class="bi bi-caret-down-fill"></i>');
-       }
-   });
-   
-   document.addEventListener('DOMContentLoaded', function() {
-       const modalTriggers = document.querySelectorAll('[data-bs-toggle="modal"]');
-       modalTriggers.forEach(trigger => {
-           trigger.addEventListener('click', function() {
-               const targetSelector = this.getAttribute('data-bs-target');
-               if (!targetSelector) return;
-               
-               const modalElement = document.querySelector(targetSelector);
-               if (!modalElement) return;
-               
-               try {
-                   const modal = new bootstrap.Modal(modalElement);
-                   modal.show();
-               } catch (e) {
-                   console.error('Error showing modal:', e);
-               }
-           });
-       });
-   });
+               action: 'medmaster_add_update',
+               update_title: title,
+               update_content: content,
+              update_tag: $('#update_tag').val(),
+              update_publish_date: $('#update_publish_date').val(),
+              nonce: medmaster_ajax.nonce
+          },
+          success: function(response) {
+              if (response.success) {
+                  $message.removeClass('alert-info').addClass('alert-success').html(response.data.message);
+                  $form[0].reset();
+                  
+                  setTimeout(function() {
+                      var modal = bootstrap.Modal.getInstance(document.getElementById('addUpdateModal'));
+                      if (modal) {
+                          modal.hide();
+                      }
+                      location.reload();
+                  }, 2000);
+              } else {
+                  $message.removeClass('alert-info').addClass('alert-danger').html(response.data.message);
+              }
+          },
+          error: function() {
+              $message.removeClass('alert-info').addClass('alert-danger').html('שגיאת שרת. אנא נסה שוב מאוחר יותר.');
+          }
+      });
+  });
+  
+  $('.view-read-status-btn').on('click', function() {
+      var updateId = $(this).data('update-id');
+      var updateTitle = $(this).data('update-title');
+      
+      $('#readStatusUpdateTitle').text(updateTitle);
+      
+      $.ajax({
+          url: medmaster_ajax.ajax_url,
+          type: 'POST',
+          data: {
+              action: 'medmaster_get_read_status',
+              update_id: updateId,
+              nonce: medmaster_ajax.nonce
+          },
+          success: function(response) {
+              if (response.success) {
+                  var usersData = response.data;
+                  var html = '<table class="table table-striped">';
+                  html += '<thead><tr><th>שם</th><th>אימייל</th><th>סטטוס</th></tr></thead>';
+                  html += '<tbody>';
+                  
+                  if (usersData.length === 0) {
+                      html += '<tr><td colspan="4" class="text-center">אין נציגים במערכת</td></tr>';
+                  } else {
+                      for (var i = 0; i < usersData.length; i++) {
+                          var user = usersData[i];
+                          var statusHtml = user.has_read 
+                              ? '<span class="text-success"><i class="bi bi-check-circle-fill"></i> נקרא</span>' 
+                              : '<span class="text-danger"><i class="bi bi-x-circle-fill"></i> לא נקרא</span>';
+                          
+                          html += '<tr>';
+                          html += '<td>' + user.name + '</td>';
+                          html += '<td>' + user.email + '</td>';
+                          html += '<td>' + statusHtml + '</td>';
+                          html += '</tr>';
+                      }
+                  }
+                  
+                  html += '</tbody></table>';
+                  $('#read-status-content').html(html);
+              } else {
+                  $('#read-status-content').html('<div class="alert alert-danger">' + response.data.message + '</div>');
+              }
+          },
+          error: function() {
+              $('#read-status-content').html('<div class="alert alert-danger">שגיאת שרת. אנא נסה שוב מאוחר יותר.</div>');
+          }
+      });
+  });
+  
+  $('.delete-update-btn').on('click', function() {
+      var $updateCard = $(this).closest('.update-card-wrapper');
+      var updateId = $updateCard.data('update-id');
+      var updateTitle = $updateCard.find('.card-title').text().trim();
+      
+      if (confirm('האם אתה בטוח שברצונך למחוק את העדכון "' + updateTitle + '"?')) {
+          $.ajax({
+              url: medmaster_ajax.ajax_url,
+              type: 'POST',
+              data: {
+                  action: 'medmaster_delete_update',
+                  update_id: updateId,
+                  nonce: medmaster_ajax.nonce
+              },
+              success: function(response) {
+                  if (response.success) {
+                      $updateCard.fadeOut(500, function() {
+                          $(this).remove();
+                          
+                          $('#updates-list').prepend(
+                              '<div class="col-12 mb-3"><div class="alert alert-success">' + 
+                              response.data.message + 
+                              '</div></div>'
+                          );
+                          
+                          setTimeout(function() {
+                              $('#updates-list .alert').fadeOut(500, function() {
+                                  $(this).parent().remove();
+                              });
+                          }, 3000);
+                      });
+                  } else {
+                      alert(response.data.message);
+                  }
+              },
+              error: function() {
+                  alert('שגיאת שרת. אנא נסה שוב מאוחר יותר.');
+              }
+          });
+      }
+  });
+  <?php endif; ?>
+  
+  $('.mark-as-read-checkbox').on('change', function() {
+      var $checkbox = $(this);
+      var updateId = $checkbox.data('update-id');
+      
+      if ($checkbox.is(':checked') && !$checkbox.is(':disabled')) {
+          $.ajax({
+              url: medmaster_ajax.ajax_url,
+              type: 'POST',
+              data: {
+                  action: 'medmaster_mark_as_read',
+                  update_id: updateId,
+                  nonce: medmaster_ajax.nonce
+              },
+              success: function(response) {
+                  if (response.success) {
+                      $checkbox.prop('disabled', true);
+                  } else {
+                      $checkbox.prop('checked', false);
+                      alert(response.data.message);
+                  }
+              },
+              error: function() {
+                  $checkbox.prop('checked', false);
+                  alert('שגיאת שרת. אנא נסה שוב מאוחר יותר.');
+              }
+          });
+      }
+  });
+  
+  $('.read-more-toggle').on('click', function(e) {
+      e.preventDefault();
+      var $content = $(this).closest('.update-content');
+      var $excerpt = $content.find('.excerpt-content');
+      var $fullContent = $content.find('.full-content');
+      
+      if ($excerpt.is(':visible')) {
+          $excerpt.hide();
+          $fullContent.show();
+          $(this).html('סגור <i class="bi bi-caret-up-fill"></i>');
+      } else {
+          $fullContent.hide();
+          $excerpt.show();
+          $(this).html('קרא עוד <i class="bi bi-caret-down-fill"></i>');
+      }
+  });
+  
+  document.addEventListener('DOMContentLoaded', function() {
+      const modalTriggers = document.querySelectorAll('[data-bs-toggle="modal"]');
+      modalTriggers.forEach(trigger => {
+          trigger.addEventListener('click', function() {
+              const targetSelector = this.getAttribute('data-bs-target');
+              if (!targetSelector) return;
+              
+              const modalElement = document.querySelector(targetSelector);
+              if (!modalElement) return;
+              
+              try {
+                  const modal = new bootstrap.Modal(modalElement);
+                  modal.show();
+              } catch (e) {
+                  console.error('Error showing modal:', e);
+              }
+          });
+      });
+  });
 });
 </script>
 
