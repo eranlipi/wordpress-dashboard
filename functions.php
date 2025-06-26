@@ -746,4 +746,118 @@ function medmaster_refresh_users_table() {
     wp_die();
 }
 add_action('wp_ajax_medmaster_refresh_users_table', 'medmaster_refresh_users_table');
+
+
+// =====================================================
+// AJAX Get Update for Editing
+// =====================================================
+
+function medmaster_ajax_get_update() {
+    check_ajax_referer('medmaster_ajax_nonce', 'nonce');
+    
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'אין לך הרשאה לערוך עדכונים']);
+        wp_die();
+    }
+    
+    $update_id = isset($_POST['update_id']) ? intval($_POST['update_id']) : 0;
+    
+    if ($update_id === 0) {
+        wp_send_json_error(['message' => 'מזהה עדכון לא תקין']);
+        wp_die();
+    }
+    
+    $post = get_post($update_id);
+    
+    if (!$post || $post->post_type !== 'updates') {
+        wp_send_json_error(['message' => 'העדכון לא נמצא']);
+        wp_die();
+    }
+    
+    $tags = get_the_terms($update_id, 'update_tag');
+    $tag_id = '';
+    if ($tags && !is_wp_error($tags)) {
+        $tag_id = $tags[0]->term_id;
+    }
+    
+    $publish_date = '';
+    if ($post->post_status === 'future') {
+        $publish_date = date('Y-m-d', strtotime($post->post_date));
+    }
+    
+    wp_send_json_success([
+        'title' => $post->post_title,
+        'content' => $post->post_content,
+        'tag_id' => $tag_id,
+        'publish_date' => $publish_date
+    ]);
+    wp_die();
+}
+add_action('wp_ajax_medmaster_get_update', 'medmaster_ajax_get_update');
+
+// =====================================================
+// AJAX Edit Update
+// =====================================================
+
+function medmaster_ajax_edit_update() {
+    check_ajax_referer('medmaster_ajax_nonce', 'nonce');
+    
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'אין לך הרשאה לערוך עדכונים']);
+        wp_die();
+    }
+    
+    $update_id = isset($_POST['update_id']) ? intval($_POST['update_id']) : 0;
+    $title = isset($_POST['update_title']) ? sanitize_text_field($_POST['update_title']) : '';
+    $content = isset($_POST['update_content']) ? wp_kses_post($_POST['update_content']) : '';
+    $tag_id = isset($_POST['update_tag']) ? intval($_POST['update_tag']) : 0;
+    $publish_date = isset($_POST['update_publish_date']) ? sanitize_text_field($_POST['update_publish_date']) : '';
+    
+    if ($update_id === 0) {
+        wp_send_json_error(['message' => 'מזהה עדכון לא תקין']);
+        wp_die();
+    }
+    
+    if (empty($title) || empty($content)) {
+        wp_send_json_error(['message' => 'נא למלא כותרת ותוכן']);
+        wp_die();
+    }
+    
+    $post_status = 'publish';
+    $post_date = current_time('mysql');
+    
+    if (!empty($publish_date)) {
+        $publish_timestamp = strtotime($publish_date);
+        
+        if ($publish_timestamp > current_time('timestamp')) {
+            $post_status = 'future';
+            $post_date = date('Y-m-d H:i:s', $publish_timestamp);
+        }
+    }
+    
+    $update_data = array(
+        'ID'           => $update_id,
+        'post_title'   => $title,
+        'post_content' => $content,
+        'post_status'  => $post_status,
+        'post_date'    => $post_date,
+    );
+    
+    $result = wp_update_post($update_data);
+    
+    if (is_wp_error($result)) {
+        wp_send_json_error(['message' => $result->get_error_message()]);
+        wp_die();
+    }
+    
+    if ($tag_id > 0) {
+        wp_set_object_terms($update_id, $tag_id, 'update_tag');
+    } else {
+        wp_set_object_terms($update_id, [], 'update_tag');
+    }
+    
+    wp_send_json_success(['message' => 'העדכון נשמר בהצלחה']);
+    wp_die();
+}
+add_action('wp_ajax_medmaster_edit_update', 'medmaster_ajax_edit_update');
 ?>
