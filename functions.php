@@ -368,10 +368,10 @@ function medmaster_ajax_add_update() {
     
     $post_status = 'publish';
     $post_date = current_time('mysql');
-    
+
     if (!empty($publish_date)) {
         $publish_timestamp = strtotime($publish_date);
-        
+
         if ($publish_timestamp > current_time('timestamp')) {
             $post_status = 'future';
             $post_date = date('Y-m-d H:i:s', $publish_timestamp);
@@ -780,10 +780,7 @@ function medmaster_ajax_get_update() {
         $tag_id = $tags[0]->term_id;
     }
     
-    $publish_date = '';
-    if ($post->post_status === 'future') {
-        $publish_date = date('Y-m-d', strtotime($post->post_date));
-    }
+    $publish_date = date('Y-m-d', strtotime($post->post_date));
     
     wp_send_json_success([
         'title' => $post->post_title,
@@ -823,16 +820,14 @@ function medmaster_ajax_edit_update() {
         wp_die();
     }
     
-    $post_status = 'publish';
-    $post_date = current_time('mysql');
-    
+    $existing_post = get_post($update_id);
+    $post_status = $existing_post ? $existing_post->post_status : 'publish';
+    $post_date = $existing_post ? $existing_post->post_date : current_time('mysql');
+
     if (!empty($publish_date)) {
         $publish_timestamp = strtotime($publish_date);
-        
-        if ($publish_timestamp > current_time('timestamp')) {
-            $post_status = 'future';
-            $post_date = date('Y-m-d H:i:s', $publish_timestamp);
-        }
+        $post_date = date('Y-m-d H:i:s', $publish_timestamp);
+        $post_status = ($publish_timestamp > current_time('timestamp')) ? 'future' : 'publish';
     }
     
     $update_data = array(
