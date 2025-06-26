@@ -860,4 +860,31 @@ function medmaster_ajax_edit_update() {
     wp_die();
 }
 add_action('wp_ajax_medmaster_edit_update', 'medmaster_ajax_edit_update');
+
+// AJAX check for new updates
+function medmaster_ajax_check_new_updates() {
+    check_ajax_referer('medmaster_ajax_nonce', 'nonce');
+
+    $after = isset($_POST['after']) ? sanitize_text_field($_POST['after']) : '';
+    if (empty($after)) {
+        wp_send_json_success(['has_new' => false]);
+        wp_die();
+    }
+
+    $args = [
+        'post_type'      => 'updates',
+        'posts_per_page' => 1,
+        'post_status'    => 'publish',
+        'date_query'     => [
+            ['after' => $after]
+        ]
+    ];
+
+    $query = new WP_Query($args);
+    $has_new = $query->have_posts();
+    wp_send_json_success(['has_new' => $has_new]);
+    wp_die();
+}
+add_action('wp_ajax_medmaster_check_new_updates', 'medmaster_ajax_check_new_updates');
+add_action('wp_ajax_nopriv_medmaster_check_new_updates', 'medmaster_ajax_check_new_updates');
 ?>

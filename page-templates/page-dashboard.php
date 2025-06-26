@@ -131,7 +131,7 @@ $is_admin = current_user_can('manage_options');
                         $excerpt = wp_trim_words(get_the_excerpt(), 30, '...');
                         $has_more = (strlen($content) > strlen($excerpt) + 20);
                 ?>
-                        <div class="col-md-12 mb-3 update-card-wrapper" data-update-id="<?php echo $update_id; ?>">
+                        <div class="col-md-12 mb-3 update-card-wrapper" data-update-id="<?php echo $update_id; ?>" data-update-date="<?php echo get_the_date('c'); ?>">
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title d-flex justify-content-between">

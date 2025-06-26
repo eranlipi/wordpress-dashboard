@@ -334,4 +334,24 @@ jQuery(document).ready(function($) {
             });
         }
     });
+    function checkForNewUpdates() {
+        var latestDate = jQuery(".update-card-wrapper").first().data("update-date");
+        if (!latestDate) { return; }
+        jQuery.ajax({
+            url: medmaster_ajax.ajax_url,
+            type: "POST",
+            data: {
+                action: "medmaster_check_new_updates",
+                after: latestDate,
+                nonce: medmaster_ajax.nonce
+            },
+            success: function(response) {
+                if (response.success && response.data.has_new) {
+                    location.reload();
+                }
+            }
+        });
+    }
+    setInterval(checkForNewUpdates, 60000);
+
 });
