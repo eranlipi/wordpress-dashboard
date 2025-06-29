@@ -17,7 +17,7 @@ get_header('minimal'); // שימוש בכותרת מינימלית
         <div class="col-md-6 col-lg-5">
             <div class="card shadow-lg">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0 text-center"><?php the_title(); ?></h3>
+                    <h3 class="mb-0 text-center">התחברות למערכת עדכונים מד-מאסטר</h3>
                 </div>
                 <div class="card-body p-4">
                     <?php
