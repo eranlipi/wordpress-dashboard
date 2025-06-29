@@ -22,8 +22,8 @@ $is_admin = current_user_can('manage_options');
     <div class="row w-100">
         <div class="col-12">
             <header class="mb-4 d-flex justify-content-between align-items-center flex-column">
-                <h1><?php the_title(); ?></h1>
-                <h3><?php the_content(); ?></h3>
+                <h1 class="text-center">מערכת עדכונים וחדשות – מד-מאסטר</h1>
+                <h3 class="text-center">כל מה שחדש וחשוב לדעת!</h3>
                 <?php if ($is_admin) : ?>
                     <div class="admin-actions align-self-end">
                         <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addUpdateModal">
