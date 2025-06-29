@@ -158,11 +158,11 @@ $is_admin = current_user_can('manage_options');
                                     </p>
                                     <div class="card-text update-content">
                                         <?php if ($has_more) : ?>
-                                            <div class="excerpt-content"><?php echo wpautop($excerpt); ?></div>
-                                            <div class="full-content" style="display:none;"><?php echo wpautop($content); ?></div>
+                                            <div class="excerpt-content"><?php echo wpautop(make_clickable($excerpt)); ?></div>
+                                            <div class="full-content" style="display:none;"><?php echo wpautop(make_clickable($content)); ?></div>
                                             <a href="#" class="read-more-toggle small">קרא עוד <i class="bi bi-caret-down-fill"></i></a>
                                         <?php else : ?>
-                                            <?php echo wpautop($content); ?>
+                                            <?php echo wpautop(make_clickable($content)); ?>
                                         <?php endif; ?>
                                     </div>
 
