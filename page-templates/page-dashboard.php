@@ -76,7 +76,17 @@ $is_admin = current_user_can('manage_options');
 
                                         <div class="mb-3">
                                             <label for="edit_update_content" class="form-label">תוכן</label>
-                                            <textarea class="form-control" id="edit_update_content" name="edit_update_content" rows="6" required></textarea>
+                                            <?php
+                                            wp_editor('', 'edit_update_content', array(
+                                                'textarea_name' => 'edit_update_content',
+                                                'textarea_rows' => 6,
+                                                'media_buttons' => true,
+                                                'teeny' => false,
+                                                'tinymce' => array(
+                                                    'directionality' => 'rtl',
+                                                ),
+                                            ));
+                                            ?>
                                         </div>
 
                                         <div class="alert" id="edit-update-message" style="display: none;"></div>
@@ -394,7 +404,17 @@ $is_admin = current_user_can('manage_options');
 
                         <div class="mb-3">
                             <label for="update_content" class="form-label">תוכן</label>
-                            <textarea class="form-control" id="update_content" name="update_content" rows="6" required></textarea>
+                            <?php
+                            wp_editor('', 'update_content', array(
+                                'textarea_name' => 'update_content',
+                                'textarea_rows' => 6,
+                                'media_buttons' => true,
+                                'teeny' => false,
+                                'tinymce' => array(
+                                    'directionality' => 'rtl',
+                                ),
+                            ));
+                            ?>
                         </div>
 
                         <div class="alert" id="add-update-message" style="display: none;"></div>
@@ -655,7 +675,7 @@ $is_admin = current_user_can('manage_options');
                 var $message = $('#add-update-message');
 
                 var title = $('#update_title').val().trim();
-                var content = $('#update_content').val().trim();
+                var content = tinymce.get('update_content').getContent();
 
                 if (!title) {
                     alert('נא להזין כותרת לעדכון');
@@ -687,6 +707,7 @@ $is_admin = current_user_can('manage_options');
                         if (response.success) {
                             $message.removeClass('alert-info').addClass('alert-success').html(response.data.message);
                             $form[0].reset();
+                            tinymce.get('update_content').setContent('');
 
                             setTimeout(function() {
                                 var modal = bootstrap.Modal.getInstance(document.getElementById('addUpdateModal'));
@@ -805,6 +826,9 @@ $is_admin = current_user_can('manage_options');
                 $('#edit-update-form')[0].reset();
                 $('#edit-update-message').hide();
                 $('#edit_update_id').val(updateId);
+                if (tinymce.get('edit_update_content')) {
+                    tinymce.get('edit_update_content').setContent('');
+                }
 
                 // טעינת נתוני העדכון
                 $.ajax({
@@ -819,7 +843,11 @@ $is_admin = current_user_can('manage_options');
                         if (response.success) {
                             const data = response.data;
                             $('#edit_update_title').val(data.title);
-                            $('#edit_update_content').val(data.content);
+                            if (tinymce.get('edit_update_content')) {
+                                tinymce.get('edit_update_content').setContent(data.content);
+                            } else {
+                                $('#edit_update_content').val(data.content);
+                            }
                             $('#edit_update_tag').val(data.tag_id);
                             $('#edit_update_publish_date').val(data.publish_date);
 
@@ -840,7 +868,7 @@ $is_admin = current_user_can('manage_options');
             $('#edit-update-submit').on('click', function() {
                 const updateId = $('#edit_update_id').val();
                 const title = $('#edit_update_title').val().trim();
-                const content = $('#edit_update_content').val().trim();
+                const content = tinymce.get('edit_update_content').getContent();
                 const tagId = $('#edit_update_tag').val();
                 const publishDate = $('#edit_update_publish_date').val();
 
