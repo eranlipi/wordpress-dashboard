@@ -151,9 +151,13 @@ $is_admin = current_user_can('manage_options');
                                         <?php echo $tag_html; ?>
                                         <span class="publish-date">
                                             <?php echo $publish_date; ?>
-                                            <?php if ($is_admin && $is_future_post) : ?>
-                                                <span class="badge bg-warning text-dark ms-1">מתוזמן (<?php echo get_the_date('d/m/Y H:i', $update_id); ?>)</span>
-                                            <?php endif; ?>
+                                            <span class="badge ms-1 <?php echo $is_future_post ? 'bg-warning text-dark' : 'bg-success'; ?>">
+                                                <?php if ($is_future_post) : ?>
+                                                    Scheduled (<?php echo get_the_date('d/m/Y H:i', $update_id); ?>)
+                                                <?php else : ?>
+                                                    Public
+                                                <?php endif; ?>
+                                            </span>
                                         </span>
                                     </p>
                                     <div class="card-text update-content">

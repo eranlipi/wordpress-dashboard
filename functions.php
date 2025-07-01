@@ -780,8 +780,8 @@ function medmaster_ajax_get_update() {
         $tag_id = $tags[0]->term_id;
     }
     
-    // Default the publish date to today's date when editing an update
-    $publish_date = current_time('Y-m-d');
+    // Use the post's publish date when editing
+    $publish_date = date('Y-m-d', strtotime($post->post_date));
     
     wp_send_json_success([
         'title' => $post->post_title,
