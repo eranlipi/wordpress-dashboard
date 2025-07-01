@@ -828,7 +828,7 @@ function medmaster_ajax_edit_update() {
     if (!empty($publish_date)) {
         $publish_timestamp = strtotime($publish_date);
         $post_date = date('Y-m-d H:i:s', $publish_timestamp);
-        $post_status = ($publish_timestamp > current_time('timestamp')) ? 'future' : 'publish';
+        $post_status = ($publish_timestamp > current_time('timestamp')) ? 'draft' : 'publish';
     }
     
     $update_data = array(
